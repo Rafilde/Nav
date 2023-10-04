@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:navtour/registerPage/register.dart';
+import 'package:navtour/HomePage/homePage.dart';
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -20,7 +21,7 @@ class _loginState extends State<login> {
           gradient: RadialGradient(
             center: Alignment(0, 0),
             radius: 1,
-            colors: [Color(0xFF019E49), Color(0xFF003910)],
+            colors: [Color.fromARGB(255, 2, 129, 158), Color.fromARGB(255, 0, 13, 58)],
           ),
         ),
         child: Padding(

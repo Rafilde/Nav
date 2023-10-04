@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <user-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> <!--Localização proxima do user-->
+    <user-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> <!--Localização precisa do user-->
     <application
         android:label="navtour"
         android:name="${applicationName}"
