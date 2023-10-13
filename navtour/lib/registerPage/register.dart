@@ -25,7 +25,7 @@ class _registerState extends State<register> {
           gradient: RadialGradient(
             center: Alignment(0, 0),
             radius: 1,
-            colors: [Color(0xFF019E49), Color(0xFF003910)],
+            colors: [Color.fromARGB(255, 2, 129, 158), Color.fromARGB(255, 0, 13, 58)],
           ),
         ),
         child: Padding(
