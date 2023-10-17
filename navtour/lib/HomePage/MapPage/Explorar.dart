@@ -30,6 +30,7 @@ class _ExplorarState extends State<Explorar> {
   void initState() {
     mapController = MapController();
     super.initState();
+    fetchLocations();
   }
 
   void getCurrentLozation() async {
@@ -68,6 +69,30 @@ class _ExplorarState extends State<Explorar> {
     });
   }
 
+  final TextEditingController _controller = TextEditingController();
+
+  Future<void> fetchLocations() async {
+    String name = _controller.text;
+
+    if (name.isEmpty) return;
+
+    http.Response response = await http.get(Uri.parse(
+        "https://nominatim.openstreetmap.org/search?q=$name&format=json&polygon=1&addressdetails=1"));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      // Extrair as coordenadas da resposta
+      double lat = double.parse(data[0]['lat']);
+      double lon = double.parse(data[0]['lon']);
+
+      // Atualizar as coordenadas do mapa
+      mapController.move(LatLng(lat, lon), 15.0);
+    } else {
+      throw Exception('Falha ao carregar o Local');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -99,7 +124,7 @@ class _ExplorarState extends State<Explorar> {
                       builder: (ctx) => Container(
                         child: Icon(
                           Icons.location_on,
-                          color: Colors.red,
+                          color: const Color.fromARGB(255, 54, 244, 139),
                           size: 40.0,
                         ),
                       ),
@@ -135,14 +160,22 @@ class _ExplorarState extends State<Explorar> {
                               blurRadius: 6),
                         ]),
                     child: TextField(
+                      controller: _controller,
                       decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 16),
-                          prefixIcon: Icon(Icons.search,
-                              color: Color.fromARGB(255, 116, 116, 116)),
-                          border: InputBorder.none,
-                          hintText: "Pesquisar",
-                          hintStyle: TextStyle(color: Color(0xFF9C9C9C))),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                        prefixIcon: IconButton(
+                          icon: Icon(Icons.search),
+                          color: Color.fromARGB(255, 116, 116, 116),
+                          onPressed: () {
+                            fetchLocations(); // Chame a função para atualizar as coordenadas do mapa
+                            _controller.clear();
+                          },
+                        ),
+                        border: InputBorder.none,
+                        hintText: "Pesquisar",
+                        hintStyle: TextStyle(color: Color(0xFF9C9C9C)),
+                      ),
                     ),
                   ),
                 ),
@@ -214,25 +247,6 @@ class _ExplorarState extends State<Explorar> {
                 ),
               ),
             ),
-            /*Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      _filterTags("Restaurantes"),
-                      _filterTags("Academias"),
-                      _filterTags("Hotéis"),
-                      _filterTags("Shoppings"),
-                      _filterTags("Farmácias"),
-                      _filterTags("Museus"),
-                      _moreFilter("mais..."),
-                    ],
-                  ),
-                ),
-              ],
-            ),*/
           ],
         ),
       ),
@@ -266,22 +280,22 @@ class _ExplorarState extends State<Explorar> {
     return Padding(
       padding: EdgeInsets.only(bottom: 10, left: 15),
       child: InputChip(
-      elevation: 2,
-      shadowColor: Color.fromARGB(93, 0, 0, 0),
-      label: Text(
-        filterName,
-        style: TextStyle(
-          color: Colors.black,
+        elevation: 2,
+        shadowColor: Color.fromARGB(93, 0, 0, 0),
+        label: Text(
+          filterName,
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        onPressed: () {
+          print('Tag "$filterName" clicada.');
+        },
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
         ),
       ),
-      onPressed: () {
-        print('Tag "$filterName" clicada.');
-      },
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-    ),
     );
   }
 }
