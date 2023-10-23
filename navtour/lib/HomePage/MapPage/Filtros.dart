@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:navtour/HomePage/MapPage/Explorar.dart';
 
@@ -5,14 +7,9 @@ import 'package:navtour/HomePage/MapPage/Explorar.dart';
   runApp(FilterPage());
 }*/
 
-class FilterPage extends StatefulWidget {
+class FilterPage extends StatelessWidget {
   const FilterPage({super.key});
 
-  @override
-  State<FilterPage> createState() => _FilterPageState();
-}
-
-class _FilterPageState extends State<FilterPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,7 +24,7 @@ class _FilterPageState extends State<FilterPage> {
             ),
             tooltip: 'Back',
             onPressed: () {
-                Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
           ),
           title: Text(
@@ -59,6 +56,7 @@ class _FilterPageState extends State<FilterPage> {
                     'Entrega',
                     'Música ao vivo',
                   ],
+                  context,
                 ),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 255, 255, 255),
@@ -87,6 +85,7 @@ class _FilterPageState extends State<FilterPage> {
                     'Artigos esportivos',
                     'Conveniência',
                   ],
+                  context,
                 ),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 255, 255, 255),
@@ -116,6 +115,7 @@ class _FilterPageState extends State<FilterPage> {
                     'Eletroposto',
                     'Farmácias',
                   ],
+                  context,
                 ),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 255, 255, 255),
@@ -136,7 +136,8 @@ class _FilterPageState extends State<FilterPage> {
     );
   }
 
-  Widget _buildCategoryTags(String categoryName, List<String> tags) {
+  Widget _buildCategoryTags(
+      String categoryName, List<String> tags, BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.0), // Espaçamento em torno das tags
       child: Column(
@@ -165,6 +166,7 @@ class _FilterPageState extends State<FilterPage> {
                 ),
                 onPressed: () {
                   print('Tag "$tag" clicada.');
+                  Navigator.pop(context, tag);
                 },
                 backgroundColor: Colors.white, // Cor de fundo da tag
                 shape: RoundedRectangleBorder(

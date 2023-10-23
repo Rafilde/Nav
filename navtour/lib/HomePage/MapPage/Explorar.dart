@@ -5,6 +5,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
+import 'package:navtour/HomePage/MapPage/locale.dart';
+import 'Filtros.dart';
 
 class Explorar extends StatefulWidget {
   const Explorar({super.key});
@@ -14,6 +16,8 @@ class Explorar extends StatefulWidget {
 }
 
 class _ExplorarState extends State<Explorar> {
+  String filtro = "";
+  Filters filters = Filters();
   List<LatLng> routpoints = [LatLng(52.05884, -1.345583)];
 
   late final MapController mapController;
@@ -26,6 +30,7 @@ class _ExplorarState extends State<Explorar> {
     color: Colors.blue,
     size: 48,
   );
+
   @override
   void initState() {
     mapController = MapController();
@@ -106,31 +111,22 @@ class _ExplorarState extends State<Explorar> {
                 zoom: 15.0,
                 onTap: (tapPosition, point) {
                   print(point);
-                  addMarker(point);
+                  //addMarker(point);
                 },
               ),
               mapController: mapController,
               children: [
                 TileLayer(
                   urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  //https://tile.openstreetmap.org/{z}/{x}/{y}.png
+                  //https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png
+                  //https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png
+                  //https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png
+                  //https://leaflet-extras.github.io/leaflet-providers/preview/
                 ),
                 MarkerLayer(
                   //markers: markers.toList()
-                  markers: [
-                    Marker(
-                      width: 40.0,
-                      height: 40.0,
-                      point: LatLng(51.5, -0.09), // Coordenadas do marcador
-                      builder: (ctx) => Container(
-                        child: Icon(
-                          Icons.location_on,
-                          color: const Color.fromARGB(255, 54, 244, 139),
-                          size: 40.0,
-                        ),
-                      ),
-                    ),
-                    // Adicione mais marcadores conforme necessário
-                  ],
+                  markers: filters.select(filtro),
                 ),
                 PolygonLayer(
                   polygonCulling: false,
@@ -265,8 +261,15 @@ class _ExplorarState extends State<Explorar> {
             color: Colors.black,
           ),
         ),
-        onPressed: () {
-          Navigator.pushNamed(context, '/filtros');
+        onPressed: () async {
+          final tagSelecionada = await Navigator.pushNamed(context, '/filtros');
+          if (tagSelecionada != null) {
+            print('Tag selecionada: $tagSelecionada');
+            setState(() {
+            filtro = "$tagSelecionada"; // Atualiza o estado do filtro
+          });
+            // Faça o que você precisa com a "tag" aqui
+          }
         },
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
