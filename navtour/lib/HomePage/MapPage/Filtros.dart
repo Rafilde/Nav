@@ -1,7 +1,9 @@
 import 'dart:js';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:navtour/HomePage/MapPage/Explorar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /*void main() {
   runApp(FilterPage());
@@ -46,15 +48,15 @@ class FilterPage extends StatelessWidget {
                 child: _buildCategoryTags(
                   'Entretenimento',
                   [
-                    'Parques',
-                    'Academia',
-                    'Filmes para viagem',
-                    'Atrações',
-                    'Vida noturna',
-                    'Museus',
-                    'Bibliotecas',
-                    'Entrega',
-                    'Música ao vivo',
+                    'park',
+                    'casino',
+                    'cinema',
+                    'cafe',
+                    'nightclub',
+                    'bar',
+                    'library',
+                    'swingerclub',
+                    'theatre',
                   ],
                   context,
                 ),
@@ -75,15 +77,13 @@ class FilterPage extends StatelessWidget {
                 child: _buildCategoryTags(
                   'Compras',
                   [
-                    'Supermercados',
-                    'Cosméticos',
-                    'Concessionárias',
-                    'Casa de jardim',
-                    'Vestuário',
-                    'Shopping centers',
-                    'Eletrônicos',
-                    'Artigos esportivos',
-                    'Conveniência',
+                    'cafe',
+                    'fast_food',
+                    'ice_cream',
+                    'pub',
+                    'restaurant',
+                    'food_court',
+                    'biergarten',
                   ],
                   context,
                 ),
@@ -104,16 +104,14 @@ class FilterPage extends StatelessWidget {
                 child: _buildCategoryTags(
                   'Serviços',
                   [
-                    'Banco 24h',
-                    'Salão de beleza',
-                    'Gasolina',
-                    'Alugar carro',
-                    'Hotéis',
-                    'Lava-rápido',
-                    'Lavagem a seco',
-                    'Hospitais e clínicas',
-                    'Eletroposto',
-                    'Farmácias',
+                    'taxi',
+                    'fuel',
+                    'pharmacy',
+                    'car_wash',
+                    'bus_station',
+                    'bicycle_rental',
+                    'bicycle_parking',
+                    'compressed_air',
                   ],
                   context,
                 ),
@@ -135,13 +133,15 @@ class FilterPage extends StatelessWidget {
       ),
     );
   }
+  
 
+  
   Widget _buildCategoryTags(
       String categoryName, List<String> tags, BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16.0), // Espaçamento em torno das tags
+      padding: EdgeInsets.all(16.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch, // Alinha à esquerda
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             categoryName,
@@ -150,10 +150,10 @@ class FilterPage extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 10.0), // Espaço vertical entre o título e as tags
+          SizedBox(height: 10.0),
           Wrap(
-            spacing: 25.0, // Espaçamento horizontal entre as tags
-            runSpacing: 25.0, // Espaçamento vertical entre as tags
+            spacing: 25.0,
+            runSpacing: 25.0,
             children: tags.map((tag) {
               return InputChip(
                 elevation: 2,
@@ -161,23 +161,52 @@ class FilterPage extends StatelessWidget {
                 label: Text(
                   tag,
                   style: TextStyle(
-                    color: Colors.blue, // Cor do texto da tag
+                    color: Colors.blue,
                   ),
                 ),
                 onPressed: () {
-                  print('Tag "$tag" clicada.');
-                  Navigator.pop(context, tag);
+                  Navigator.of(context).pop(tag);
                 },
-                backgroundColor: Colors.white, // Cor de fundo da tag
+                backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(20.0), // Borda da tag arredondada
+                  borderRadius: BorderRadius.circular(20.0),
                 ),
-              );
+              ); 
             }).toList(),
           ),
         ],
       ),
     );
+  }
+}
+
+class CustomInputChip extends  StatefulWidget {
+  String filterName;
+  List<bool> isSelec;
+
+  CustomInputChip({
+    Key? key,
+    required this.isSelec,
+    required this.filterName,
+    required Widget label,
+  }); 
+          @override
+         State<CustomInputChip> createState() => _CustomInputChipState();
+}
+class _CustomInputChipState extends State<CustomInputChip> {
+  @override
+  Widget build(BuildContext context) {
+    return InputChip(
+          key: widget.key,
+          label: Text(widget.filterName),
+           onPressed: () {
+                  Navigator.of(context).pop(widget.filterName);
+                },
+          backgroundColor: widget.isSelec[0] ? Colors.amber : Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+         // selected: widget.isSelec[0],
+        );
   }
 }
