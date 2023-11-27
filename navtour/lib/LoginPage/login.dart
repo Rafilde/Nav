@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:navtour/registerPage/register.dart';
 import 'package:navtour/HomePage/homePage.dart';
+import 'package:navtour/services/auth_service.dart';
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -13,6 +14,18 @@ class _loginState extends State<login> {
   bool _obscureText = true;
   final _formKey = GlobalKey<FormState>();
 
+  final AuthService _auth = AuthService();
+
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +34,10 @@ class _loginState extends State<login> {
           gradient: RadialGradient(
             center: Alignment(0, 0),
             radius: 1,
-            colors: [Color.fromARGB(255, 2, 129, 158), Color.fromARGB(255, 0, 13, 58)],
+            colors: [
+              Color.fromARGB(255, 5, 158, 2),
+              Color.fromARGB(255, 0, 58, 1)
+            ], //Color.fromARGB(255, 2, 129, 158), Color.fromARGB(255, 0, 13, 58)
           ),
         ),
         child: Padding(
@@ -31,8 +47,7 @@ class _loginState extends State<login> {
               //width: 350,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius:
-                    BorderRadius.circular(10.0), // Bordas arredondadas
+                borderRadius: BorderRadius.circular(10.0),
               ),
               padding: EdgeInsets.all(28),
               //vai fazer o container aumenta a medida que eu coloco coisa
@@ -52,6 +67,7 @@ class _loginState extends State<login> {
                             return null;
                           }
                         },
+                        controller: _emailController,
                         decoration: InputDecoration(
                             labelText: 'Email',
                             labelStyle: TextStyle(
@@ -71,6 +87,7 @@ class _loginState extends State<login> {
                             return null;
                           }
                         },
+                        controller: _passwordController,
                         decoration: InputDecoration(
                           labelText: 'Senha',
                           labelStyle: TextStyle(
@@ -111,10 +128,7 @@ class _loginState extends State<login> {
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
-                            );
-                            Navigator.pushNamed(context, '/Explorar');
+                            _signIn();
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -278,5 +292,29 @@ class _loginState extends State<login> {
         ),
       ),
     );
+  }
+
+  Future<void> _signIn() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    String? user = await _auth.login(email: email, password: password);
+    if (user == 'Sucesso') {
+      Navigator.pushNamed(context, '/Explorar');
+    } else if (user == 'user-not-found') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${user}')),
+      );
+      print(user);
+    } else if (user == 'wrong-password') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${user}')),
+      );
+      print(user);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${user}')),
+      );
+    }
   }
 }

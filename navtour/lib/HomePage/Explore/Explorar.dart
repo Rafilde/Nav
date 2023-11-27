@@ -21,8 +21,8 @@ class _ExplorarState extends State<Explorar> {
 
   Set<Marker> markers = {};
   final Icon markerIcon = Icon(
-    Icons.pin_drop,
-    color: Colors.blue,
+    Icons.location_on_sharp,
+    color: Color.fromARGB(255, 255, 0, 0),
     size: 48,
   );
 
@@ -261,7 +261,6 @@ class CustomInputChip extends StatefulWidget {
   @override
   State<CustomInputChip> createState() => _CustomInputChipState();
 }
-
 class _CustomInputChipState extends State<CustomInputChip> {
   @override
   Widget build(BuildContext context) {
@@ -298,7 +297,6 @@ class searchIcon extends StatefulWidget {
   @override
   State<searchIcon> createState() => _searchIconState();
 }
-
 class _searchIconState extends State<searchIcon> {
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:navtour/LoginPage/login.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:navtour/services/auth_service.dart';
 
 class register extends StatefulWidget {
   const register({super.key});
@@ -17,6 +19,20 @@ class _registerState extends State<register> {
 
   final _formKey = GlobalKey<FormState>();
 
+  final AuthService _auth = AuthService();
+
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +41,10 @@ class _registerState extends State<register> {
           gradient: RadialGradient(
             center: Alignment(0, 0),
             radius: 1,
-            colors: [Color.fromARGB(255, 2, 129, 158), Color.fromARGB(255, 0, 13, 58)],
+            colors: [
+              Color.fromARGB(255, 5, 158, 2),
+              Color.fromARGB(255, 0, 58, 1)
+            ],
           ),
         ),
         child: Padding(
@@ -53,6 +72,7 @@ class _registerState extends State<register> {
                             return null;
                           }
                         },
+                        controller: _usernameController,
                         decoration: InputDecoration(
                             labelText: 'Nome de usuário',
                             labelStyle: TextStyle(
@@ -75,6 +95,7 @@ class _registerState extends State<register> {
                             return null;
                           }
                         },
+                        controller: _emailController,
                         decoration: InputDecoration(
                             labelText: 'Email',
                             labelStyle: TextStyle(
@@ -96,6 +117,7 @@ class _registerState extends State<register> {
                             return null;
                           }
                         },
+                        controller: _passwordController,
                         decoration: InputDecoration(
                           labelText: 'Criar senha',
                           labelStyle: TextStyle(
@@ -153,11 +175,7 @@ class _registerState extends State<register> {
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            // If the form is valid, display a snackbar. In the real world,
-                            // you'd often call a server or save the information in a database.
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
-                            );
+                            _signUp();
                           }
                         },
                         onLongPress: () {},
@@ -327,5 +345,28 @@ class _registerState extends State<register> {
         ),
       ),
     );
+  }
+
+  Future<void> _signUp() async {
+    String username = _usernameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    String? user = await _auth.registration(email: email, password: password);
+    if (user == 'Sucesso') {
+      Navigator.pushNamed(context, '/Explorar');
+    } else if (user == 'weak-password') {
+      ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text('${user}')),
+      );
+    } else if (user == 'email-already-in-use') {
+      ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text('${user}')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text('${user}')),
+      );
+    }
   }
 }

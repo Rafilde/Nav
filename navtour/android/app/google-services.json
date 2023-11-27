@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "150589550145",
+    "project_id": "navtour-281fa",
+    "storage_bucket": "navtour-281fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:150589550145:android:d15d6fbe9055d54642a0c0",
+        "android_client_info": {
+          "package_name": "com.example.navtour"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAfQUD3LMAFsIOE9cPu5s4Elred9GwXKE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

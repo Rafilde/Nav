@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'MapPage/Explorar.dart';
+import 'Explore/Explorar.dart';
 import 'Favoritos.dart';
 import 'Fotos.dart';
 import 'Roteiro.dart';
-import 'MapPage/Filtros.dart';
+import 'Explore/Filtros.dart';
 
 void main() {
   runApp(HomePage());
